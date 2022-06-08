@@ -1,0 +1,21 @@
+{
+  "name": "fukkkkkkkk",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "run": "esbuild src/index.ts --external:./node_modules/* --platform=node --bundle --outfile=index.js && node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/stremio-addon-sdk": "^1.6.3",
+    "axios": "^0.27.2",
+    "esbuild": "^0.14.43",
+    "express": "^4.18.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.13"
+  }
+}
