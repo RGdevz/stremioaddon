@@ -87,7 +87,13 @@ app.get('/catalog/:type/:id.json', function (req, res, next) {
 
 
 
+
 app.get('/stream/:type/:id.json', async (req, res) => {
+
+
+	const fullUrl = req.protocol + '://' + req.get('host')
+
+
 
 	const type = req.params.type
 	const id = req.params.id
@@ -117,12 +123,12 @@ app.get('/stream/:type/:id.json', async (req, res) => {
 
 		case 'isratv-ch12':
 
-			const link =	await 	mako.addmakoticket('https://mako-streaming.akamaized.net/stream/hls/live/2033791/k12dvr/index.m3u8?b-in-range=800-2400&')
+
 
 			//@ts-ignore
 			/*stream = [{ url: link, behaviorHints: {notWebReady : true , proxyHeaders: { "request": { "User-Agent": mako.ua() }}}   } ]*/
 
-			stream = [{ url: link  } ]
+			stream = [{ url: `${fullUrl}/mako`  } ]
 
 			break
 
@@ -134,10 +140,7 @@ app.get('/stream/:type/:id.json', async (req, res) => {
 	 }
 
 
-
-
 	return res.send(JSON.stringify({streams: stream}))
-
 
 
 }
@@ -147,6 +150,21 @@ app.get('/stream/:type/:id.json', async (req, res) => {
 
 
 
+
+
+app.get('/mako', async (req, res) => {
+
+	let ua = req.header('user-agent')
+	if (!ua){
+	ua = 'isratv'
+	}
+
+ const link  = await mako.addmakoticket('https://mako-streaming.akamaized.net/stream/hls/live/2033791/k12dvr/index.m3u8?b-in-range=800-2400&',ua)
+
+	return res.redirect(link)
+
+}
+)
 
 
 
