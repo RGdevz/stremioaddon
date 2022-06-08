@@ -91,7 +91,7 @@ app.get('/catalog/:type/:id.json', function (req, res, next) {
 app.get('/stream/:type/:id.json', async (req, res) => {
 
 
-	const fullUrl = req.protocol + '://' + req.get('host')
+	const fullUrl = req.protocol + '://' + req.header('host')
 
 
 
@@ -117,7 +117,7 @@ app.get('/stream/:type/:id.json', async (req, res) => {
 			break
 
 		case 'isratv-ch11':
-			stream = [{ url: 'https://kan11.media.kan.org.il/hls/live/2024514/2024514/master.m3u8' }]
+			stream = [{ url: 'https://kan11.media.kan.org.il/hls/live/2024514/2024514/source1_1.8k/chunklist.m3u8' }]
 			break
 
 
@@ -152,6 +152,7 @@ app.get('/stream/:type/:id.json', async (req, res) => {
 
 
 
+
 app.get('/mako', async (req, res) => {
 
 	let ua = req.header('user-agent')
@@ -159,9 +160,14 @@ app.get('/mako', async (req, res) => {
 	ua = 'isratv'
 	}
 
- const link  = await mako.addmakoticket('https://mako-streaming.akamaized.net/stream/hls/live/2033791/k12dvr/index.m3u8?b-in-range=800-2400&',ua)
+	try {
+		const link = await mako.addmakoticket('https://mako-streaming.akamaized.net/stream/hls/live/2033791/k12dvr/index.m3u8?b-in-range=800-2400&', ua)
 
-	return res.redirect(link)
+		return res.redirect(link)
+
+	}catch (e){
+		return res.status(400).send(e.toString())
+	}
 
 }
 )

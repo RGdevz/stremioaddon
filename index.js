@@ -69,7 +69,7 @@ app.get("/catalog/:type/:id.json", function(req, res, next) {
   return res.send(JSON.stringify({ metas: meta }));
 });
 app.get("/stream/:type/:id.json", async (req, res) => {
-  const fullUrl = req.protocol + "://" + req.get("host");
+  const fullUrl = req.protocol + "://" + req.header("host");
   const type = req.params.type;
   const id = req.params.id;
   let stream = Array();
@@ -84,7 +84,7 @@ app.get("/stream/:type/:id.json", async (req, res) => {
       stream = [{ url: "https://contact.gostreaming.tv/Knesset/myStream/playlist.m3u8" }];
       break;
     case "isratv-ch11":
-      stream = [{ url: "https://kan11.media.kan.org.il/hls/live/2024514/2024514/master.m3u8" }];
+      stream = [{ url: "https://kan11.media.kan.org.il/hls/live/2024514/2024514/source1_1.8k/chunklist.m3u8" }];
       break;
     case "isratv-ch12":
       stream = [{ url: `${fullUrl}/mako` }];
@@ -100,8 +100,12 @@ app.get("/mako", async (req, res) => {
   if (!ua) {
     ua = "isratv";
   }
-  const link = await mako.addmakoticket("https://mako-streaming.akamaized.net/stream/hls/live/2033791/k12dvr/index.m3u8?b-in-range=800-2400&", ua);
-  return res.redirect(link);
+  try {
+    const link = await mako.addmakoticket("https://mako-streaming.akamaized.net/stream/hls/live/2033791/k12dvr/index.m3u8?b-in-range=800-2400&", ua);
+    return res.redirect(link);
+  } catch (e) {
+    return res.status(400).send(e.toString());
+  }
 });
 app.get("/meta/:type/:id.json", function(req, res) {
   const type = req.params.type;
